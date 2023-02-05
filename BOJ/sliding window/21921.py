@@ -1,59 +1,46 @@
-# 2531
-# silver 1
+# 21921
+# silver 3
 
-# 회전 초밥 음식점에는 회전하는 벨트 위에 여러 가지 종류의 초밥이 접시에 담겨 놓여 있고, 손님은 이 중에서 자기가 좋아하는 초밥을 골라서 먹는다.
-# 초밥의 종류를 번호로 표현할 때, 다음 그림은 회전 초밥 음식점의 벨트 상태의 예를 보여주고 있다. 벨트 위에는 같은 종류의 초밥이 둘 이상 있을 수 있다.
+# 찬솔이는 블로그를 시작한 지 벌써
+# $N$일이 지났다.
+#
+# 요즘 바빠서 관리를 못 했다가 방문 기록을 봤더니 벌써 누적 방문 수가 6만을 넘었다.
 #
 #
 #
-# 새로 문을 연 회전 초밥 음식점이 불경기로 영업이 어려워서, 다음과 같이 두 가지 행사를 통해서 매상을 올리고자 한다.
+# 찬솔이는
+# $X$일 동안 가장 많이 들어온 방문자 수와 그 기간들을 알고 싶다.
 #
-# 원래 회전 초밥은 손님이 마음대로 초밥을 고르고, 먹은 초밥만큼 식대를 계산하지만, 벨트의 임의의 한 위치부터 k개의 접시를 연속해서 먹을 경우 할인된 정액 가격으로 제공한다.
-# 각 고객에게 초밥의 종류 하나가 쓰인 쿠폰을 발행하고, 1번 행사에 참가할 경우 이 쿠폰에 적혀진 종류의 초밥 하나를 추가로 무료로 제공한다.
-# 만약 이 번호에 적혀진 초밥이 현재 벨트 위에 없을 경우, 요리사가 새로 만들어 손님에게 제공한다.
-# 위 할인 행사에 참여하여 가능한 한 다양한 종류의 초밥을 먹으려고 한다. 위 그림의 예를 가지고 생각해보자. k=4이고, 30번 초밥을 쿠폰으로 받았다고 가정하자.
-# 쿠폰을 고려하지 않으면 4가지 다른 초밥을 먹을 수 있는 경우는 (9, 7, 30, 2), (30, 2, 7, 9), (2, 7, 9, 25) 세 가지 경우가 있는데, 30번 초밥을 추가로 쿠폰으로 먹을 수 있으므로 (2, 7, 9, 25)를 고르면 5가지 종류의 초밥을 먹을 수 있다.
-#
-# 회전 초밥 음식점의 벨트 상태, 메뉴에 있는 초밥의 가짓수, 연속해서 먹는 접시의 개수, 쿠폰 번호가 주어졌을 때, 손님이 먹을 수 있는 초밥 가짓수의 최댓값을 구하는 프로그램을 작성하시오.
+# 찬솔이를 대신해서
+# $X$일 동안 가장 많이 들어온 방문자 수와 기간이 몇 개 있는지 구해주자.
 
 
 # Example
 #input              output
-# 8 30 4 30         5
-# 7
-# 9
-# 7
-# 30
-# 2
-# 7
-# 9
-# 25
+# 5 2               7
+# 1 4 2 5 1         1
 
 import sys
-import collections
 
+input = sys.stdin.readline
 
-plate, types, k, c = map(int, sys.stdin.readline().split())
-on_belt = []
-
-for _ in range(plate):
-    on_belt.append(int(sys.stdin.readline()))
-
-l, r = 0, 0
-window = collections.defaultdict(int)
-window[c] += 1
-while r < k:
-    window[on_belt[r]] += 1
-    r += 1
+n, m = map(int, input().split())
+arr = list(map(int, input().split()))
 result = 0
-while l < plate:
-    result = max(len(window), result)
+count = 0
+addup = sum(arr[:m-1])
+for i in range(m-1, n):
+    addup += arr[i]
+    if addup > result:
+        count = 0
+        count += 1
+        result = addup
+    elif addup == result:
+        count += 1
+    addup -= arr[i-m+1]
 
-    window[on_belt[l]] -= 1
-    if window[on_belt[l]] == 0:
-        del window[on_belt[l]]
-    window[on_belt[r%plate]] += 1
-    l += 1
-    r += 1
-
-print(result)
+if result != 0:
+    print(result)
+    print(count)
+else:
+    print('SAD')
